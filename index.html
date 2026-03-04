@@ -100,6 +100,7 @@
                         <label class="text-xs font-bold text-slate-500 uppercase ml-1">Tahun</label>
                         <select id="formYear" class="w-full mt-1 px-4 py-3 rounded-xl border outline-none">
                             <option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option>
+                            <option value="2029">2029</option><option value="2030">2030</option>
                         </select>
                     </div>
                     <div>
@@ -148,27 +149,37 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // PASTI KAN INI SESUAI DENGAN ATURAN PATH FIRESTORE YANG SAYA BERIKAN
+        // Path koleksi tetap konsisten
         const appId = "kkg-pai-lau-final"; 
 
         let allFiles = [];
 
+        // Fungsi Render Data
         function render() {
             const y = document.getElementById('yearFilter').value;
             const m = document.getElementById('monthFilter').value;
-            const filtered = allFiles.filter(f => f.year === y && f.month === m);
+            
+            // Filter berdasarkan pilihan sidebar
+            const filtered = allFiles.filter(f => String(f.year) === String(y) && String(f.month) === String(m));
 
             document.getElementById('statsInfo').innerText = `Tersimpan: ${filtered.length} Berkas`;
             const container = document.getElementById('fileContainer');
             
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 italic">Belum ada data untuk periode ${m} ${y}.</div>`;
+                container.innerHTML = `
+                    <div class="col-span-full py-20 text-center text-slate-400 italic">
+                        <i data-lucide="file-question" class="w-12 h-12 mx-auto mb-4 opacity-20"></i>
+                        <p>Belum ada data untuk periode ${m} ${y}.</p>
+                    </div>`;
             } else {
+                // Urutkan berdasarkan waktu terbaru
+                filtered.sort((a, b) => b.timestamp - a.timestamp);
+                
                 container.innerHTML = filtered.map(f => `
-                    <div class="premium-card p-6 rounded-3xl flex flex-col justify-between border-l-4 border-l-emerald-500 shadow-sm">
+                    <div class="premium-card p-6 rounded-3xl flex flex-col justify-between border-l-4 border-l-emerald-500 shadow-sm hover:shadow-md transition-all">
                         <div>
                             <span class="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-lg uppercase">${f.category}</span>
-                            <h4 class="font-bold text-lg mt-3 text-slate-800">${f.title}</h4>
+                            <h4 class="font-bold text-lg mt-3 text-slate-800 leading-tight">${f.title}</h4>
                         </div>
                         <div class="flex justify-between items-center mt-8 border-t pt-4">
                             <button onclick="window.deleteMe('${f.id}')" class="text-red-400 text-xs hover:text-red-600 flex items-center gap-1">
@@ -180,60 +191,89 @@
                         </div>
                     </div>
                 `).join('');
-                lucide.createIcons();
             }
+            lucide.createIcons();
         }
 
-        onAuthStateChanged(auth, (user) => {
+        // Monitoring State Login & Data
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
+                console.log("Logged in as:", user.uid);
                 const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'files');
+                
+                // Listener real-time
                 onSnapshot(colRef, (snapshot) => {
                     allFiles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     render();
                 }, (err) => {
-                    console.error(err);
-                    document.getElementById('statsInfo').innerText = "Cek Rules Firebase!";
+                    console.error("Firestore Error:", err);
+                    document.getElementById('statsInfo').innerText = "Koneksi Bermasalah!";
                 });
             } else {
-                signInAnonymously(auth);
+                try {
+                    await signInAnonymously(auth);
+                } catch (e) {
+                    console.error("Auth Error:", e);
+                }
             }
         });
 
+        // Event Listeners UI
         document.getElementById('uploadBtn').onclick = () => {
+            // Set default nilai modal sesuai filter saat ini
             document.getElementById('formYear').value = document.getElementById('yearFilter').value;
             document.getElementById('formMonth').value = document.getElementById('monthFilter').value;
             document.getElementById('uploadModal').classList.remove('hidden');
         };
+        
         document.getElementById('closeModal').onclick = () => document.getElementById('uploadModal').classList.add('hidden');
         document.getElementById('yearFilter').onchange = render;
         document.getElementById('monthFilter').onchange = render;
 
+        // Fungsi Hapus Global
         window.deleteMe = async (id) => {
-            if(confirm("Hapus berkas ini?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'files', id));
+            if(confirm("Hapus berkas ini dari database?")) {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'files', id));
+                } catch(e) {
+                    alert("Gagal menghapus!");
+                }
             }
         };
 
+        // Handle Submit Form
         document.getElementById('uploadForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.innerText = "Proses Menyimpan...";
+            btn.disabled = true; 
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 loading-spinner mr-2 inline"></i> Menyimpan...`;
+            lucide.createIcons();
 
             try {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'files'), {
+                const payload = {
                     title: document.getElementById('fileTitle').value,
                     category: document.getElementById('fileCategory').value,
                     year: document.getElementById('formYear').value,
                     month: document.getElementById('formMonth').value,
                     url: document.getElementById('fileUrl').value,
                     timestamp: Date.now()
-                });
+                };
+
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'files'), payload);
+                
                 document.getElementById('uploadModal').classList.add('hidden');
                 document.getElementById('uploadForm').reset();
+                
+                // Notifikasi sukses sederhana
+                console.log("Data berhasil disimpan");
             } catch(e) { 
-                alert("Gagal! Pastikan Rules Firebase sudah di-PUBLISH."); 
+                console.error(e);
+                alert("Gagal menyimpan! Pastikan Anda sudah klik PUBLISH pada Rules Firebase."); 
+            } finally {
+                btn.disabled = false; 
+                btn.innerText = "Simpan ke Database";
+                lucide.createIcons();
             }
-            btn.disabled = false; btn.innerText = "Simpan ke Database";
         };
 
         lucide.createIcons();
