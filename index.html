@@ -85,7 +85,7 @@
                 <div class="bg-emerald-600 p-8 rounded-[2rem] text-white shadow-lg text-center relative overflow-hidden group">
                     <i data-lucide="cloud-info" class="absolute -right-4 -bottom-4 w-24 h-24 opacity-10 group-hover:scale-110 transition-transform"></i>
                     <p class="text-[10px] font-black uppercase tracking-widest opacity-70 mb-1">Status Database</p>
-                    <p id="statsDisplay" class="text-2xl font-black italic">Sinkronisasi...</p>
+                    <p id="statsDisplay" class="text-2xl font-black italic">Mengkoneksikan...</p>
                 </div>
             </aside>
 
@@ -103,7 +103,7 @@
 
     <!-- Modal Form -->
     <div id="modalOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-xl shadow-2xl overflow-hidden">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
             <div class="px-10 py-8 bg-slate-50 border-b flex justify-between items-center">
                 <div>
                     <h3 class="text-2xl font-extrabold text-slate-800">Unggah Arsip</h3>
@@ -115,6 +115,10 @@
             </div>
             
             <form id="uploadForm" class="p-10 space-y-6">
+                <div id="errorAlert" class="hidden p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-bold mb-4">
+                    Gagal menyimpan data. Pastikan Firebase Rules sudah disetel ke true.
+                </div>
+
                 <div>
                     <label class="text-[11px] font-black text-slate-500 uppercase ml-1 mb-2 block tracking-wider">Nama Kegiatan / Nama File</label>
                     <input type="text" id="inpTitle" placeholder="Misal: Rapat Evaluasi Program Kerja" required class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium">
@@ -187,7 +191,9 @@
                 .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
             const grid = document.getElementById('fileGrid');
-            document.getElementById('statsDisplay').innerText = `${filtered.length} Berkas`;
+            const stats = document.getElementById('statsDisplay');
+            
+            stats.innerText = `${filtered.length} Berkas`;
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
@@ -223,15 +229,25 @@
             lucide.createIcons();
         }
 
-        onAuthStateChanged(auth, (user) => {
+        // Monitoring Login Status
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                document.getElementById('statsDisplay').innerText = "ONLINE";
+                console.log("Logged in as:", user.uid);
+                // Start listening to data
                 onSnapshot(collection(db, COLLECTION_PATH), (snap) => {
                     archiveData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     updateDisplay();
+                }, (err) => {
+                    console.error("Snapshot error:", err);
+                    document.getElementById('statsDisplay').innerText = "ERROR DB";
                 });
             } else {
-                signInAnonymously(auth);
+                try {
+                    await signInAnonymously(auth);
+                } catch (err) {
+                    console.error("Auth error:", err);
+                    document.getElementById('statsDisplay').innerText = "AUTH ERROR";
+                }
             }
         });
 
@@ -241,6 +257,7 @@
         const modal = document.getElementById('modalOverlay');
         document.getElementById('openModalBtn').onclick = () => {
             document.getElementById('inpMonth').value = document.getElementById('monthFilter').value;
+            document.getElementById('errorAlert').classList.add('hidden');
             modal.classList.remove('hidden');
         };
         document.getElementById('closeModalBtn').onclick = () => modal.classList.add('hidden');
@@ -248,8 +265,11 @@
         document.getElementById('uploadForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
+            const errorAlert = document.getElementById('errorAlert');
+            
             btn.disabled = true;
             btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 loading-spin"></i> MENYIMPAN...`;
+            errorAlert.classList.add('hidden');
             lucide.createIcons();
 
             try {
@@ -261,11 +281,18 @@
                     url: document.getElementById('inpUrl').value,
                     createdAt: serverTimestamp()
                 };
+                
+                // Cek koneksi manual sebelum simpan
+                if (!auth.currentUser) throw new Error("Belum terautentikasi.");
+
                 await addDoc(collection(db, COLLECTION_PATH), newDoc);
+                
                 modal.classList.add('hidden');
                 e.target.reset();
             } catch (err) {
-                alert("Kesalahan: " + err.message);
+                console.error("Submission failed:", err);
+                errorAlert.innerText = "Error: " + err.message;
+                errorAlert.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Simpan Data Arsip`;
@@ -275,7 +302,11 @@
 
         window.confirmDelete = async (id) => {
             if (confirm("Hapus arsip ini secara permanen?")) {
-                await deleteDoc(doc(db, COLLECTION_PATH, id));
+                try {
+                    await deleteDoc(doc(db, COLLECTION_PATH, id));
+                } catch (err) {
+                    alert("Gagal menghapus: " + err.message);
+                }
             }
         };
 
