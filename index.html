@@ -20,7 +20,6 @@
 <body class="text-slate-900">
 
     <div id="app" class="max-w-6xl mx-auto px-4 py-8">
-        <!-- Header -->
         <header class="relative overflow-hidden rounded-3xl islamic-pattern p-10 mb-10 text-white shadow-xl text-center md:text-left">
             <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
@@ -35,7 +34,6 @@
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <!-- Sidebar -->
             <aside class="space-y-4">
                 <div class="premium-card p-6 rounded-3xl shadow-sm">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Filter Periode</h3>
@@ -65,11 +63,10 @@
                 </div>
                 <div class="premium-card p-6 rounded-3xl bg-emerald-50 border-emerald-100 shadow-sm text-center">
                     <p class="text-[10px] font-bold text-emerald-600 uppercase">Status Sistem</p>
-                    <p id="statsInfo" class="text-sm font-bold text-emerald-900 italic">Sinkronisasi Database...</p>
+                    <p id="statsInfo" class="text-sm font-bold text-emerald-900 italic">Menunggu Koneksi...</p>
                 </div>
             </aside>
 
-            <!-- Main Content -->
             <section class="lg:col-span-3">
                 <div id="fileContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Data loaded here -->
@@ -111,8 +108,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDy6_e0g_zOXBtQ6ll6z1z6Zlh4raRJ9-w",
@@ -128,18 +125,13 @@
         const db = getFirestore(app);
         const appId = "kkg-pai-lau-v5"; 
 
-        signInAnonymously(auth).then(() => {
-            const q = collection(db, 'artifacts', appId, 'public', 'data', 'files');
-            onSnapshot(q, (snapshot) => {
-                const files = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                render(files);
-            });
-        });
+        let allFiles = [];
 
-        function render(data) {
+        // Fungsi Render
+        function render() {
             const y = document.getElementById('yearFilter').value;
             const m = document.getElementById('monthFilter').value;
-            const filtered = data.filter(f => f.year === y && f.month === m);
+            const filtered = allFiles.filter(f => f.year === y && f.month === m);
 
             document.getElementById('statsInfo').innerText = `Tersimpan: ${filtered.length} Berkas`;
             const container = document.getElementById('fileContainer');
@@ -154,7 +146,7 @@
                             <h4 class="font-bold text-lg mt-3 text-slate-800 leading-tight">${f.title}</h4>
                         </div>
                         <div class="flex justify-between items-center mt-8 border-t pt-4">
-                            <button onclick="deleteMe('${f.id}')" class="text-red-400 text-xs hover:text-red-600 transition-colors flex items-center gap-1">
+                            <button onclick="window.deleteMe('${f.id}')" class="text-red-400 text-xs hover:text-red-600 transition-colors flex items-center gap-1">
                                 <i data-lucide="trash-2" class="w-3 h-3"></i> Hapus
                             </button>
                             <a href="${f.url}" target="_blank" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-emerald-600 transition-all flex items-center gap-2">
@@ -163,19 +155,42 @@
                         </div>
                     </div>
                 `).join('');
+                lucide.createIcons();
             }
-            lucide.createIcons();
         }
 
+        // Jalankan Auth & Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const q = collection(db, 'artifacts', appId, 'public', 'data', 'files');
+                onSnapshot(q, (snapshot) => {
+                    allFiles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    render();
+                }, (err) => {
+                    console.error("Firestore Error:", err);
+                    document.getElementById('statsInfo').innerText = "Akses Database Ditolak";
+                });
+            } else {
+                signInAnonymously(auth);
+            }
+        });
+
+        // UI Handlers
         document.getElementById('uploadBtn').onclick = () => document.getElementById('uploadModal').classList.remove('hidden');
         document.getElementById('closeModal').onclick = () => document.getElementById('uploadModal').classList.add('hidden');
+        document.getElementById('yearFilter').onchange = render;
+        document.getElementById('monthFilter').onchange = render;
 
+        // Global Delete
         window.deleteMe = async (id) => {
             if(confirm("Yakin ingin menghapus data ini?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'files', id));
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'files', id));
+                } catch(e) { alert("Gagal menghapus!"); }
             }
         };
 
+        // Submit Form
         document.getElementById('uploadForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -193,23 +208,10 @@
                 document.getElementById('uploadModal').classList.add('hidden');
                 document.getElementById('uploadForm').reset();
             } catch(e) { 
-                alert("Gagal menyimpan!"); 
+                alert("Gagal menyimpan! Periksa Rules di Firebase Console."); 
             }
             btn.disabled = false; btn.innerText = "Simpan ke Database";
         };
-
-        document.getElementById('yearFilter').onchange = () => {
-            // Re-render when year changes
-            signInAnonymously(auth).then(() => {
-                const q = collection(db, 'artifacts', appId, 'public', 'data', 'files');
-                onSnapshot(q, (snapshot) => {
-                    const files = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    render(files);
-                });
-            });
-        };
-        
-        document.getElementById('monthFilter').onchange = document.getElementById('yearFilter').onchange;
 
         lucide.createIcons();
     </script>
