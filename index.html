@@ -3,264 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Dokumentasi KKG PAI Kec. LAU</title>
+    <title>Portal Drive KKG PAI Kec. LAU</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800&display=swap');
-        body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #f1f5f9; }
         .islamic-pattern {
             background-color: #059669;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30L15 30z' fill='%23065f46' fill-opacity='0.2'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30L15 30z' fill='%23065f46' fill-opacity='0.1'/%3E%3C/svg%3E");
         }
-        .premium-card { background: white; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
-        .btn-emerald { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
-        .loading-spinner { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .drive-card { 
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .drive-card:hover { 
+            transform: translateY(-5px);
+            border-color: #10b981;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
     </style>
 </head>
 <body class="text-slate-900">
 
-    <div id="app" class="max-w-6xl mx-auto px-4 py-8">
+    <div class="max-w-5xl mx-auto px-4 py-12">
         <!-- Header -->
-        <header class="relative overflow-hidden rounded-3xl islamic-pattern p-10 mb-10 text-white shadow-xl text-center md:text-left">
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <span class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Kecamatan LAU</span>
-                    <h1 class="text-4xl font-extrabold mt-2 text-white">E-Dokumentasi KKG PAI</h1>
-                    <p class="text-emerald-50/80">Sistem Arsip Digital Berbasis Google Drive</p>
+        <header class="relative overflow-hidden rounded-[2.5rem] islamic-pattern p-12 mb-12 text-white shadow-2xl text-center md:text-left">
+            <div class="relative z-10">
+                <span class="bg-white/20 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em]">Pusat Arsip Digital</span>
+                <h1 class="text-5xl font-extrabold mt-4 text-white tracking-tight">E-Dokumentasi LAU</h1>
+                <p class="text-emerald-50/90 text-lg mt-2 font-medium">Akses Langsung Folder Google Drive KKG PAI</p>
+                
+                <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
+                    <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
+                        <i data-lucide="shield-check" class="w-5 h-5 text-amber-300"></i>
+                        <span class="text-sm font-semibold">Aman & Terpusat</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
+                        <i data-lucide="cloud" class="w-5 h-5 text-sky-300"></i>
+                        <span class="text-sm font-semibold">Real-time Drive Sync</span>
+                    </div>
                 </div>
-                <button id="uploadBtn" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-8 py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3">
-                    <i data-lucide="plus-circle"></i> Tambah Arsip Baru
-                </button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <!-- Sidebar -->
-            <aside class="space-y-4">
-                <div class="premium-card p-6 rounded-3xl shadow-sm border-t-4 border-emerald-500">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Filter Periote</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Pilih Tahun</label>
-                            <select id="yearFilter" class="w-full bg-slate-50 border rounded-xl px-4 py-3 font-semibold outline-none focus:ring-2 focus:ring-emerald-500">
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                                <option value="2029">2029</option>
-                                <option value="2030">2030</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Pilih Bulan</label>
-                            <select id="monthFilter" class="w-full bg-slate-50 border rounded-xl px-4 py-3 font-semibold outline-none focus:ring-2 focus:ring-emerald-500">
-                                <option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret" selected>Maret</option>
-                                <option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option>
-                                <option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option>
-                                <option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option>
-                            </select>
-                        </div>
-                    </div>
+        <!-- Grid Navigasi -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Folder 1 -->
+            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group">
+                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                    <i data-lucide="folder-kanban" class="w-8 h-8"></i>
                 </div>
-                <div class="premium-card p-6 rounded-3xl bg-emerald-50 border-emerald-100 shadow-sm text-center">
-                    <p class="text-[10px] font-bold text-emerald-600 uppercase">Status Sistem</p>
-                    <p id="statsInfo" class="text-sm font-bold text-emerald-900 italic">Memulai...</p>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Administrasi KKG</h3>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6">Program kerja, SK kepengurusan, dan dokumen organisasi lainnya.</p>
+                <div class="flex items-center text-emerald-600 font-bold text-sm">
+                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
                 </div>
-            </aside>
+            </a>
 
-            <!-- Main Content -->
-            <section class="lg:col-span-3">
-                <div id="fileContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="col-span-full py-20 text-center text-slate-400">
-                        <i data-lucide="loader-2" class="w-10 h-10 mx-auto loading-spinner mb-4 text-emerald-500"></i>
-                        <p>Menghubungkan ke Database...</p>
-                    </div>
+            <!-- Folder 2 -->
+            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group">
+                <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                    <i data-lucide="file-text" class="w-8 h-8"></i>
                 </div>
-            </section>
-        </div>
-    </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Notulen & Absensi</h3>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6">Catatan hasil rapat bulanan dan daftar hadir kegiatan.</p>
+                <div class="flex items-center text-amber-600 font-bold text-sm">
+                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </a>
 
-    <!-- Modal Form -->
-    <div id="uploadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-slate-800">Input Data Arsip</h3>
-                <button id="closeModal" class="text-slate-400 hover:text-slate-600"><i data-lucide="x"></i></button>
-            </div>
-            <form id="uploadForm" class="space-y-5">
-                <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Nama/Judul Kegiatan</label>
-                    <input type="text" id="fileTitle" placeholder="Misal: Rapat Program Ramadhan" required class="w-full mt-1 px-4 py-3 rounded-xl border focus:ring-2 focus:ring-emerald-500 outline-none">
+            <!-- Folder 3 -->
+            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group">
+                <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                    <i data-lucide="image" class="w-8 h-8"></i>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase ml-1">Tahun Arsip</label>
-                        <select id="formYear" class="w-full mt-1 px-4 py-3 rounded-xl border outline-none bg-slate-50">
-                            <option value="2026">2026</option><option value="2027">2027</option>
-                            <option value="2028">2028</option><option value="2029">2029</option>
-                        </select>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Dokumentasi Foto</h3>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6">Koleksi foto dan video kegiatan KKG PAI Kecamatan Lau.</p>
+                <div class="flex items-center text-sky-600 font-bold text-sm">
+                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </a>
+
+            <!-- Folder 4 -->
+            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group">
+                <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                    <i data-lucide="book-open" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Modul & Perangkat</h3>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6">Bahan ajar, perangkat pembelajaran, dan materi seminar.</p>
+                <div class="flex items-center text-purple-600 font-bold text-sm">
+                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </div>
+            </a>
+
+            <!-- Folder Utama -->
+            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group lg:col-span-2 bg-slate-900 border-none">
+                <div class="flex flex-col md:flex-row md:items-center gap-8">
+                    <div class="w-20 h-20 bg-white/10 text-white rounded-3xl flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500 transition-colors">
+                        <i data-lucide="hard-drive" class="w-10 h-10"></i>
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase ml-1">Bulan Arsip</label>
-                        <select id="formMonth" class="w-full mt-1 px-4 py-3 rounded-xl border outline-none bg-slate-50">
-                            <option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option>
-                            <option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option>
-                            <option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option>
-                            <option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option>
-                        </select>
+                        <h3 class="text-2xl font-bold text-white mb-2">Semua Arsip (Root Folder)</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Akses folder utama Google Drive untuk melihat seluruh struktur folder secara lengkap.</p>
+                        <div class="flex items-center text-emerald-400 font-bold">
+                            Akses Semua Berkas <i data-lucide="external-link" class="w-4 h-4 ml-2"></i>
+                        </div>
                     </div>
                 </div>
+            </a>
 
-                <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Kategori Berkas</label>
-                    <select id="fileCategory" class="w-full mt-1 px-4 py-3 rounded-xl border outline-none bg-slate-50">
-                        <option value="Undangan">Undangan</option>
-                        <option value="Notulen">Notulen</option>
-                        <option value="Daftar Hadir">Daftar Hadir</option>
-                        <option value="Foto/Video">Dokumentasi Visual</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Link Share Google Drive</label>
-                    <input type="url" id="fileUrl" placeholder="https://drive.google.com/..." required class="w-full mt-1 px-4 py-3 rounded-xl border focus:ring-2 focus:ring-emerald-500 outline-none">
-                </div>
-
-                <button type="submit" id="submitBtn" class="w-full btn-emerald text-white py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2">
-                    Simpan ke Database
-                </button>
-            </form>
         </div>
+
+        <!-- Footer -->
+        <footer class="mt-16 text-center text-slate-400 text-sm">
+            <p>&copy; 2026 KKG PAI Kecamatan Lau. Dikelola melalui Google Drive.</p>
+        </footer>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDy6_e0g_zOXBtQ6ll6z1z6Zlh4raRJ9-w",
-            authDomain: "kkg-pai-lau.firebaseapp.com",
-            projectId: "kkg-pai-lau",
-            storageBucket: "kkg-pai-lau.firebasestorage.app",
-            messagingSenderId: "332195384967",
-            appId: "1:332195384967:web:2e239a77f34f5a84dab222"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const colPath = "kkg_paila_files_v2"; 
-
-        let allFiles = [];
-
-        function render() {
-            const y = document.getElementById('yearFilter').value;
-            const m = document.getElementById('monthFilter').value;
-            
-            // Filter dan urutkan di sisi klien (tanpa perlu Index Firestore)
-            const filtered = allFiles
-                .filter(f => String(f.year) === String(y) && String(f.month) === String(m))
-                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-            document.getElementById('statsInfo').innerText = `Ditemukan: ${filtered.length} Berkas`;
-            const container = document.getElementById('fileContainer');
-            
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full py-20 text-center text-slate-400 bg-white rounded-3xl border border-dashed border-slate-200">
-                        <i data-lucide="file-x" class="w-12 h-12 mx-auto mb-4 opacity-10"></i>
-                        <p class="font-medium">Tidak ada data untuk periode<br><span class="text-slate-600">${m} ${y}</span></p>
-                    </div>`;
-            } else {
-                container.innerHTML = filtered.map(f => `
-                    <div class="premium-card p-6 rounded-3xl flex flex-col justify-between border-l-4 border-emerald-500 shadow-sm">
-                        <div>
-                            <div class="flex justify-between items-start">
-                                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded-lg uppercase tracking-wider">${f.category}</span>
-                            </div>
-                            <h4 class="font-bold text-lg mt-3 text-slate-800 leading-tight">${f.title}</h4>
-                        </div>
-                        <div class="flex justify-between items-center mt-8 border-t border-slate-50 pt-4">
-                            <button onclick="window.deleteMe('${f.id}')" class="text-red-400 text-xs hover:text-red-600 flex items-center gap-1.5 transition-colors">
-                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus
-                            </button>
-                            <a href="${f.url}" target="_blank" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-emerald-600 flex items-center gap-2">
-                                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Buka Drive
-                            </a>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            lucide.createIcons();
-        }
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                document.getElementById('statsInfo').innerText = "Tersambung";
-                // Gunakan query sederhana tanpa orderBy untuk menghindari error Index
-                const q = collection(db, colPath);
-                
-                onSnapshot(q, (snapshot) => {
-                    allFiles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    render();
-                }, (error) => {
-                    console.error("Firebase Error:", error.message);
-                    document.getElementById('statsInfo').innerText = "Gagal Akses Data";
-                });
-            } else {
-                signInAnonymously(auth);
-            }
-        });
-
-        document.getElementById('uploadBtn').onclick = () => {
-            document.getElementById('formYear').value = document.getElementById('yearFilter').value;
-            document.getElementById('formMonth').value = document.getElementById('monthFilter').value;
-            document.getElementById('uploadModal').classList.remove('hidden');
-        };
-
-        document.getElementById('closeModal').onclick = () => document.getElementById('uploadModal').classList.add('hidden');
-        document.getElementById('yearFilter').onchange = render;
-        document.getElementById('monthFilter').onchange = render;
-
-        window.deleteMe = async (id) => {
-            if(confirm("Hapus berkas ini?")) {
-                await deleteDoc(doc(db, colPath, id));
-            }
-        };
-
-        document.getElementById('uploadForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 loading-spinner"></i> Menyimpan...`;
-            lucide.createIcons();
-
-            try {
-                const data = {
-                    title: document.getElementById('fileTitle').value,
-                    category: document.getElementById('fileCategory').value,
-                    year: document.getElementById('formYear').value,
-                    month: document.getElementById('formMonth').value,
-                    url: document.getElementById('fileUrl').value,
-                    createdAt: serverTimestamp()
-                };
-
-                await addDoc(collection(db, colPath), data);
-                document.getElementById('uploadModal').classList.add('hidden');
-                document.getElementById('uploadForm').reset();
-            } catch(e) {
-                alert("Gagal menyimpan: " + e.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Simpan ke Database";
-                lucide.createIcons();
-            }
-        };
-
+    <script>
         lucide.createIcons();
     </script>
 </body>
