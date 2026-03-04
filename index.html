@@ -3,127 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Drive KKG PAI Kec. LAU</title>
+    <title>Portal Dokumentasi KKG PAI Kec. LAU</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800&display=swap');
-        body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #f1f5f9; }
-        .islamic-pattern {
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .islamic-bg {
             background-color: #059669;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30L15 30z' fill='%23065f46' fill-opacity='0.1'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0l20 40-20 40-20-40z' fill='%23047857' fill-opacity='0.1'/%3E%3C/svg%3E");
         }
-        .drive-card { 
-            background: white; 
-            border: 1px solid #e2e8f0; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        .drive-card:hover { 
-            transform: translateY(-5px);
-            border-color: #10b981;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-        }
+        .file-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .file-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1); }
+        .loading-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="text-slate-900">
+<body class="text-slate-900 leading-relaxed">
 
-    <div class="max-w-5xl mx-auto px-4 py-12">
-        <!-- Header -->
-        <header class="relative overflow-hidden rounded-[2.5rem] islamic-pattern p-12 mb-12 text-white shadow-2xl text-center md:text-left">
-            <div class="relative z-10">
-                <span class="bg-white/20 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em]">Pusat Arsip Digital</span>
-                <h1 class="text-5xl font-extrabold mt-4 text-white tracking-tight">E-Dokumentasi LAU</h1>
-                <p class="text-emerald-50/90 text-lg mt-2 font-medium">Akses Langsung Folder Google Drive KKG PAI</p>
-                
-                <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
-                    <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
-                        <i data-lucide="shield-check" class="w-5 h-5 text-amber-300"></i>
-                        <span class="text-sm font-semibold">Aman & Terpusat</span>
+    <div id="app" class="max-w-6xl mx-auto px-4 py-8 md:py-12">
+        <!-- Header Section -->
+        <header class="relative overflow-hidden rounded-[2.5rem] islamic-bg p-8 md:p-14 mb-10 text-white shadow-2xl">
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 bg-white/20 px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest mb-4">
+                        <i data-lucide="award" class="w-4 h-4"></i> Portal Resmi
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
-                        <i data-lucide="cloud" class="w-5 h-5 text-sky-300"></i>
-                        <span class="text-sm font-semibold">Real-time Drive Sync</span>
-                    </div>
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">E-Dokumentasi</h1>
+                    <p class="text-emerald-50/80 text-lg md:text-xl mt-3 font-medium">KKG PAI Kecamatan Lau, Maros</p>
                 </div>
+                <button id="openModalBtn" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-8 py-5 rounded-2xl font-black shadow-xl flex items-center gap-3 transition-all hover:scale-105 active:scale-95 group">
+                    <i data-lucide="plus-circle" class="group-hover:rotate-90 transition-transform"></i>
+                    TAMBAH ARSIP BARU
+                </button>
             </div>
         </header>
 
-        <!-- Grid Navigasi -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Folder 1 -->
-            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group">
-                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    <i data-lucide="folder-kanban" class="w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-2">Administrasi KKG</h3>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">Program kerja, SK kepengurusan, dan dokumen organisasi lainnya.</p>
-                <div class="flex items-center text-emerald-600 font-bold text-sm">
-                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                </div>
-            </a>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Sidebar Filters -->
+            <aside class="lg:col-span-3 space-y-6">
+                <div class="glass p-8 rounded-[2rem] shadow-sm border border-slate-200">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Filter Arsip</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 mb-2 block">Tahun Kegiatan</label>
+                            <select id="yearFilter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500 transition-all appearance-none cursor-pointer">
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026" selected>2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+                        </div>
 
-            <!-- Folder 2 -->
-            <a href="https://drive.google.com/drive/folders/1lirMjgo16xRJbZPI7fkrJkXZVK4Jl7K0?usp=drive_link" target="_blank" class="drive-card p-8 rounded-[2rem] group">
-                <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                    <i data-lucide="file-text" class="w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-2">Notulen & Absensi</h3>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">Catatan hasil rapat bulanan dan daftar hadir kegiatan.</p>
-                <div class="flex items-center text-amber-600 font-bold text-sm">
-                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                </div>
-            </a>
-
-            <!-- Folder 3 -->
-            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group">
-                <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-sky-600 group-hover:text-white transition-colors">
-                    <i data-lucide="image" class="w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-2">Dokumentasi Foto</h3>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">Koleksi foto dan video kegiatan KKG PAI Kecamatan Lau.</p>
-                <div class="flex items-center text-sky-600 font-bold text-sm">
-                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                </div>
-            </a>
-
-            <!-- Folder 4 -->
-            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group">
-                <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                    <i data-lucide="book-open" class="w-8 h-8"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-2">Modul & Perangkat</h3>
-                <p class="text-slate-500 text-sm leading-relaxed mb-6">Bahan ajar, perangkat pembelajaran, dan materi seminar.</p>
-                <div class="flex items-center text-purple-600 font-bold text-sm">
-                    Buka Folder <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                </div>
-            </a>
-
-            <!-- Folder Utama -->
-            <a href="GANTI_DENGAN_LINK_FOLDER_DRIVE_ANDA" target="_blank" class="drive-card p-8 rounded-[2rem] group lg:col-span-2 bg-slate-900 border-none">
-                <div class="flex flex-col md:flex-row md:items-center gap-8">
-                    <div class="w-20 h-20 bg-white/10 text-white rounded-3xl flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500 transition-colors">
-                        <i data-lucide="hard-drive" class="w-10 h-10"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-2">Semua Arsip (Root Folder)</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Akses folder utama Google Drive untuk melihat seluruh struktur folder secara lengkap.</p>
-                        <div class="flex items-center text-emerald-400 font-bold">
-                            Akses Semua Berkas <i data-lucide="external-link" class="w-4 h-4 ml-2"></i>
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 mb-2 block">Bulan Kegiatan</label>
+                            <select id="monthFilter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500 transition-all appearance-none cursor-pointer">
+                                <option value="Januari">Januari</option>
+                                <option value="Februari">Februari</option>
+                                <option value="Maret" selected>Maret</option>
+                                <option value="April">April</option>
+                                <option value="Mei">Mei</option>
+                                <option value="Juni">Juni</option>
+                                <option value="Juli">Juli</option>
+                                <option value="Agustus">Agustus</option>
+                                <option value="September">September</option>
+                                <option value="Oktober">Oktober</option>
+                                <option value="November">November</option>
+                                <option value="Desember">Desember</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-            </a>
 
+                <div class="bg-emerald-600 p-8 rounded-[2rem] text-white shadow-lg text-center relative overflow-hidden group">
+                    <i data-lucide="cloud-info" class="absolute -right-4 -bottom-4 w-24 h-24 opacity-10 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-[10px] font-black uppercase tracking-widest opacity-70 mb-1">Status Database</p>
+                    <p id="statsDisplay" class="text-2xl font-black italic">Sinkronisasi...</p>
+                </div>
+            </aside>
+
+            <!-- Main File Grid -->
+            <main class="lg:col-span-9">
+                <div id="fileGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-full py-32 text-center text-slate-400">
+                        <i data-lucide="refresh-cw" class="w-12 h-12 mx-auto mb-4 loading-spin text-emerald-500"></i>
+                        <p class="font-medium tracking-wide">Mengkoneksikan ke server...</p>
+                    </div>
+                </div>
+            </main>
         </div>
-
-        <!-- Footer -->
-        <footer class="mt-16 text-center text-slate-400 text-sm">
-            <p>&copy; 2026 KKG PAI Kecamatan Lau. Dikelola melalui Google Drive.</p>
-        </footer>
     </div>
 
-    <script>
+    <!-- Modal Form -->
+    <div id="modalOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-xl shadow-2xl overflow-hidden">
+            <div class="px-10 py-8 bg-slate-50 border-b flex justify-between items-center">
+                <div>
+                    <h3 class="text-2xl font-extrabold text-slate-800">Unggah Arsip</h3>
+                    <p class="text-sm text-slate-500 font-medium">Lengkapi data berkas di bawah ini</p>
+                </div>
+                <button id="closeModalBtn" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-200 transition-colors">
+                    <i data-lucide="x" class="text-slate-400"></i>
+                </button>
+            </div>
+            
+            <form id="uploadForm" class="p-10 space-y-6">
+                <div>
+                    <label class="text-[11px] font-black text-slate-500 uppercase ml-1 mb-2 block tracking-wider">Nama Kegiatan / Nama File</label>
+                    <input type="text" id="inpTitle" placeholder="Misal: Rapat Evaluasi Program Kerja" required class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[11px] font-black text-slate-500 uppercase ml-1 mb-2 block tracking-wider">Kategori Berkas</label>
+                        <select id="inpCategory" class="w-full px-5 py-4 rounded-2xl border border-slate-200 outline-none appearance-none bg-slate-50 cursor-pointer font-bold text-slate-700">
+                            <option value="Administrasi">Administrasi</option>
+                            <option value="Notulen">Notulen</option>
+                            <option value="Daftar Hadir">Daftar Hadir</option>
+                            <option value="Dokumentasi Visual">Foto / Video</option>
+                            <option value="Perangkat Ajar">Perangkat Ajar</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-black text-slate-500 uppercase ml-1 mb-2 block tracking-wider">Periode Bulan</label>
+                        <select id="inpMonth" class="w-full px-5 py-4 rounded-2xl border border-slate-200 outline-none appearance-none bg-slate-50 cursor-pointer font-bold text-slate-700">
+                            <option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option>
+                            <option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option>
+                            <option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[11px] font-black text-slate-500 uppercase ml-1 mb-2 block tracking-wider">Link Google Drive</label>
+                    <div class="relative">
+                        <i data-lucide="link" class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="url" id="inpUrl" placeholder="https://drive.google.com/..." required class="w-full pl-12 pr-5 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium">
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-slate-900 hover:bg-emerald-600 text-white py-5 rounded-2xl font-bold text-lg shadow-xl transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
+                    <i data-lucide="save" class="w-5 h-5"></i> Simpan Data Arsip
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDy6_e0g_zOXBtQ6ll6z1z6Zlh4raRJ9-w",
+            authDomain: "kkg-pai-lau.firebaseapp.com",
+            projectId: "kkg-pai-lau",
+            storageBucket: "kkg-pai-lau.firebasestorage.app",
+            messagingSenderId: "332195384967",
+            appId: "1:332195384967:web:2e239a77f34f5a84dab222"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const COLLECTION_PATH = "kkg_digital_archives_v1";
+
+        let archiveData = [];
+
+        function updateDisplay() {
+            const selectedYear = document.getElementById('yearFilter').value;
+            const selectedMonth = document.getElementById('monthFilter').value;
+            
+            const filtered = archiveData
+                .filter(item => String(item.year) === String(selectedYear) && String(item.month) === String(selectedMonth))
+                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+            const grid = document.getElementById('fileGrid');
+            document.getElementById('statsDisplay').innerText = `${filtered.length} Berkas`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-24 text-center bg-white/50 rounded-[2rem] border-2 border-dashed border-slate-200">
+                        <i data-lucide="file-warning" class="w-16 h-16 mx-auto mb-4 text-slate-300"></i>
+                        <p class="text-slate-500 font-extrabold text-xl">Arsip Belum Tersedia</p>
+                        <p class="text-slate-400 text-sm mt-1 font-medium">Data untuk periode ${selectedMonth} ${selectedYear} tidak ditemukan</p>
+                    </div>`;
+            } else {
+                grid.innerHTML = filtered.map(f => `
+                    <div class="file-card glass p-7 rounded-[2rem] flex flex-col justify-between border border-slate-200 group relative">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase rounded-lg tracking-widest">${f.category}</span>
+                                <button onclick="window.confirmDelete('${f.id}')" class="text-slate-300 hover:text-red-500 transition-all p-1">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            <h4 class="text-xl font-extrabold text-slate-800 group-hover:text-emerald-700 transition-colors leading-tight">${f.title}</h4>
+                            <div class="flex items-center gap-2 mt-3 text-slate-400">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                <span class="text-[11px] font-bold uppercase tracking-wider">${f.month} ${f.year}</span>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex gap-3">
+                            <a href="${f.url}" target="_blank" class="flex-1 bg-slate-900 text-white px-6 py-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600 transition-all shadow-lg active:scale-95 tracking-wide">
+                                <i data-lucide="external-link" class="w-4 h-4"></i> BUKA DOKUMEN
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            lucide.createIcons();
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('statsDisplay').innerText = "ONLINE";
+                onSnapshot(collection(db, COLLECTION_PATH), (snap) => {
+                    archiveData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    updateDisplay();
+                });
+            } else {
+                signInAnonymously(auth);
+            }
+        });
+
+        document.getElementById('yearFilter').onchange = updateDisplay;
+        document.getElementById('monthFilter').onchange = updateDisplay;
+
+        const modal = document.getElementById('modalOverlay');
+        document.getElementById('openModalBtn').onclick = () => {
+            document.getElementById('inpMonth').value = document.getElementById('monthFilter').value;
+            modal.classList.remove('hidden');
+        };
+        document.getElementById('closeModalBtn').onclick = () => modal.classList.add('hidden');
+
+        document.getElementById('uploadForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 loading-spin"></i> MENYIMPAN...`;
+            lucide.createIcons();
+
+            try {
+                const newDoc = {
+                    title: document.getElementById('inpTitle').value,
+                    category: document.getElementById('inpCategory').value,
+                    year: document.getElementById('yearFilter').value,
+                    month: document.getElementById('inpMonth').value,
+                    url: document.getElementById('inpUrl').value,
+                    createdAt: serverTimestamp()
+                };
+                await addDoc(collection(db, COLLECTION_PATH), newDoc);
+                modal.classList.add('hidden');
+                e.target.reset();
+            } catch (err) {
+                alert("Kesalahan: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Simpan Data Arsip`;
+                lucide.createIcons();
+            }
+        };
+
+        window.confirmDelete = async (id) => {
+            if (confirm("Hapus arsip ini secara permanen?")) {
+                await deleteDoc(doc(db, COLLECTION_PATH, id));
+            }
+        };
+
         lucide.createIcons();
     </script>
 </body>
