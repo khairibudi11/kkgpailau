@@ -7,525 +7,247 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800&display=swap');
         
         :root {
-            --primary: #4f46e5;
-            --accent: #06b6d4;
+            --primary: #059669;
+            --secondary: #10b981;
+            --accent: #f59e0b;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at top right, #f1f5f9, #e2e8f0);
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: #f8fafc;
             min-height: 100vh;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        .islamic-pattern {
+            background-color: #059669;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30L15 30z' fill='%23065f46' fill-opacity='0.2'/%3E%3C/svg%3E");
         }
 
-        .hero-gradient {
-            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        .premium-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .category-tab {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .premium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
         }
 
-        .category-tab.active {
-            background: #0f172a;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        .btn-emerald {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
         }
 
-        .file-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .file-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .loading-spinner {
-            border: 3px solid rgba(0, 0, 0, 0.1);
+        .loading-ring {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(5, 150, 105, 0.1);
             border-radius: 50%;
-            border-top: 3px solid #4f46e5;
-            width: 32px;
-            height: 32px;
-            animation: spin 1s linear infinite;
+            border-top-color: #059669;
+            animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .float-anim {
-            animation: float 4s ease-in-out infinite;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="custom-scrollbar text-slate-800 antialiased">
+<body class="text-slate-900">
 
-    <div id="app" class="max-w-7xl mx-auto px-4 py-8 lg:py-12">
-        <!-- Header Section -->
-        <header class="relative overflow-hidden rounded-[2.5rem] hero-gradient p-8 md:p-12 mb-12 shadow-2xl shadow-indigo-200">
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                <div class="text-white">
-                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-bold uppercase tracking-widest mb-4">
-                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                        Sistem Informasi KKG
-                    </div>
-                    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-2">Portal Dokumentasi</h1>
-                    <p class="text-indigo-100 text-lg opacity-90">Keluarga Kerja Guru PAI Kecamatan LAU</p>
+    <div id="app" class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="relative overflow-hidden rounded-3xl islamic-pattern p-10 mb-10 text-white shadow-xl">
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Kecamatan LAU</span>
+                    <h1 class="text-4xl font-extrabold mt-2 text-white">E-Dokumentasi KKG PAI</h1>
+                    <p class="text-emerald-50/80">Sistem Arsip Digital Guru Pendidikan Agama Islam</p>
                 </div>
-                <div class="flex flex-col sm:flex-row items-center gap-4">
-                    <button id="uploadBtn" class="group w-full sm:w-auto bg-white text-indigo-600 hover:bg-indigo-50 px-8 py-4 rounded-2xl font-bold transition-all shadow-xl flex items-center justify-center gap-3">
-                        <i data-lucide="upload-cloud" class="w-5 h-5 group-hover:bounce transition-transform"></i>
-                        Upload File Baru
-                    </button>
-                </div>
+                <button id="uploadBtn" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-8 py-4 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-3">
+                    <i data-lucide="plus-circle"></i> Tambah Arsip Baru
+                </button>
             </div>
-            <div class="absolute -bottom-12 -right-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-            <div class="absolute -top-12 -left-12 w-48 h-48 bg-cyan-400/20 rounded-full blur-3xl"></div>
         </header>
 
-        <!-- Dynamic Controls -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-            <div class="lg:col-span-4 space-y-6">
-                <div class="glass-card p-6 rounded-[2rem]">
-                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                        <i data-lucide="filter" class="w-4 h-4"></i> Filter Periode
-                    </h3>
-                    
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <aside class="space-y-4">
+                <div class="premium-card p-6 rounded-3xl">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Filter Periode</h3>
                     <div class="space-y-4">
-                        <div class="group">
-                            <label class="block text-xs font-bold text-slate-500 mb-2 ml-1">Tahun Kegiatan</label>
-                            <select id="yearFilter" class="w-full bg-white border-2 border-slate-100 rounded-xl px-4 py-3 font-bold text-slate-700 focus:border-indigo-500 outline-none transition-all cursor-pointer">
-                                <option value="2024">2024</option>
-                                <option value="2025" selected>2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                                <option value="2029">2029</option>
-                                <option value="2030">2030</option>
-                            </select>
-                        </div>
-
-                        <div class="group">
-                            <label class="block text-xs font-bold text-slate-500 mb-2 ml-1">Bulan Pelaksanaan</label>
-                            <select id="monthFilter" class="w-full bg-white border-2 border-slate-100 rounded-xl px-4 py-3 font-bold text-slate-700 focus:border-indigo-500 outline-none transition-all cursor-pointer">
-                                <option value="01">Januari</option><option value="02">Februari</option><option value="03" selected>Maret</option>
-                                <option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option>
-                                <option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option>
-                                <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card p-6 rounded-[2rem] bg-indigo-50/50 border-indigo-100">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white float-anim">
-                            <i data-lucide="database" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-indigo-400 uppercase tracking-tighter">Status Panel</p>
-                            <p id="statsInfo" class="text-sm font-bold text-indigo-900">Menampilkan 0 Berkas</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-8">
-                <div class="flex flex-wrap gap-3 mb-8">
-                    <button class="category-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold active" data-category="Semua">Semua</button>
-                    <button class="category-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold" data-category="Undangan">Undangan</button>
-                    <button class="category-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold" data-category="Notulen">Notulen</button>
-                    <button class="category-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold" data-category="Daftar Hadir">Daftar Hadir</button>
-                    <button class="category-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold" data-category="Dokumentasi">Foto/Video</button>
-                </div>
-
-                <div id="fileContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="col-span-full py-32 text-center">
-                        <div class="loading-spinner mx-auto mb-6"></div>
-                        <p class="font-bold text-slate-400 tracking-wide">Menghubungkan ke pusat data...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upload Modal -->
-    <div id="uploadModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300">
-            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <div>
-                    <h3 class="text-2xl font-black text-slate-900 tracking-tight">Upload Berkas Baru</h3>
-                    <p class="text-sm text-slate-500">Pilih file atau masukkan link dokumentasi</p>
-                </div>
-                <button id="closeModal" class="p-3 hover:bg-white hover:shadow-md rounded-2xl transition-all">
-                    <i data-lucide="x" class="w-6 h-6 text-slate-400"></i>
-                </button>
-            </div>
-            
-            <form id="uploadForm" class="p-8 space-y-5">
-                <!-- Progress Bar (Hidden by default) -->
-                <div id="uploadProgressContainer" class="hidden mb-4">
-                    <div class="flex justify-between text-xs font-bold text-indigo-600 mb-1 uppercase tracking-wider">
-                        <span>Sedang Mengunggah...</span>
-                        <span id="progressText">0%</span>
-                    </div>
-                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-300"></div>
-                    </div>
-                </div>
-
-                <div class="group">
-                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase ml-1">Judul Dokumentasi</label>
-                    <input type="text" id="fileTitle" required placeholder="Contoh: Rapat Kerja Tahun 2025" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 focus:border-indigo-500 outline-none transition-all font-medium">
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2 uppercase ml-1">Kategori</label>
-                        <select id="fileCategory" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 focus:border-indigo-500 outline-none transition-all font-medium">
-                            <option value="Undangan">Undangan</option>
-                            <option value="Notulen">Notulen</option>
-                            <option value="Daftar Hadir">Daftar Hadir</option>
-                            <option value="Dokumentasi">Foto/Video</option>
+                        <select id="yearFilter" class="w-full bg-slate-50 border rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-emerald-500 outline-none">
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026" selected>2026</option>
+                        </select>
+                        <select id="monthFilter" class="w-full bg-slate-50 border rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-emerald-500 outline-none">
+                            <option value="01">Januari</option><option value="02">Februari</option><option value="03" selected>Maret</option>
+                            <option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option>
+                            <option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option>
+                            <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2 uppercase ml-1">Tahun & Bulan</label>
-                        <div class="flex gap-2">
-                             <select id="fileYear" class="w-1/2 px-4 py-4 rounded-2xl border-2 border-slate-100 focus:border-indigo-500 outline-none transition-all font-medium">
-                                <option value="2024">2024</option>
-                                <option value="2025" selected>2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                                <option value="2029">2029</option>
-                                <option value="2030">2030</option>
-                            </select>
-                            <select id="fileMonth" class="w-1/2 px-4 py-4 rounded-2xl border-2 border-slate-100 focus:border-indigo-500 outline-none transition-all font-medium">
-                                <option value="01">Jan</option><option value="02">Feb</option><option value="03" selected>Mar</option>
-                                <option value="04">Apr</option><option value="05">Mei</option><option value="06">Jun</option>
-                                <option value="07">Jul</option><option value="08">Agu</option><option value="09">Sep</option>
-                                <option value="10">Okt</option><option value="11">Nov</option><option value="12">Des</option>
-                            </select>
-                        </div>
+                </div>
+                <div class="premium-card p-6 rounded-3xl bg-emerald-50 border-emerald-100">
+                    <p class="text-[10px] font-bold text-emerald-600 uppercase">Status Panel</p>
+                    <p id="statsInfo" class="text-sm font-bold text-emerald-900 italic">Memuat Data...</p>
+                </div>
+            </aside>
+
+            <!-- Main -->
+            <section class="lg:col-span-3">
+                <div id="fileContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="col-span-full py-20 text-center">
+                        <div class="loading-ring"></div>
+                        <p class="mt-4 text-slate-400">Menghubungkan ke database Firebase...</p>
                     </div>
                 </div>
-
-                <div class="space-y-4 pt-4 border-t border-slate-100">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2 uppercase ml-1">Pilih File Langsung</label>
-                        <div class="relative group">
-                            <input type="file" id="fileInput" class="hidden">
-                            <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full flex items-center justify-center gap-3 px-5 py-6 border-2 border-dashed border-slate-200 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition-all">
-                                <i data-lucide="paperclip" class="w-5 h-5 text-slate-400"></i>
-                                <span id="fileNameDisplay" class="text-sm font-bold text-slate-500 italic">Klik untuk pilih berkas...</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        <div class="h-[1px] bg-slate-100 flex-1"></div>
-                        <span class="text-[10px] font-black text-slate-300 uppercase">Atau Gunakan Link</span>
-                        <div class="h-[1px] bg-slate-100 flex-1"></div>
-                    </div>
-
-                    <div>
-                        <input type="url" id="fileUrl" placeholder="https://drive.google.com/..." class="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 focus:border-indigo-500 outline-none transition-all font-medium text-sm">
-                    </div>
-                </div>
-                
-                <button type="submit" id="submitBtn" class="w-full hero-gradient text-white py-5 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-indigo-300 transition-all active:scale-[0.98] mt-4 flex items-center justify-center gap-3">
-                    <i data-lucide="send" class="w-5 h-5"></i>
-                    Simpan ke Portal
-                </button>
-            </form>
+            </section>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="notification" class="fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-20 opacity-0 transition-all duration-500 pointer-events-none z-[100]">
-        <div class="bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10">
-            <div id="notifIcon" class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
-                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+    <!-- Modal Upload -->
+    <div id="uploadModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden p-6">
+             <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Simpan Berkas Baru</h3>
+                <button id="closeModal" class="text-slate-400 hover:text-slate-600"><i data-lucide="x"></i></button>
             </div>
-            <p id="notifMessage" class="font-bold tracking-wide"></p>
+            <form id="uploadForm" class="space-y-4">
+                <input type="text" id="fileTitle" placeholder="Judul Kegiatan" required class="w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-emerald-500">
+                <select id="fileCategory" class="w-full px-4 py-3 rounded-xl border">
+                    <option value="Undangan">Undangan</option>
+                    <option value="Notulen">Notulen</option>
+                    <option value="Daftar Hadir">Daftar Hadir</option>
+                    <option value="Dokumentasi">Dokumentasi</option>
+                </select>
+                <div class="p-6 border-2 border-dashed rounded-2xl bg-slate-50 text-center">
+                    <input type="file" id="fileInput" class="hidden">
+                    <button type="button" onclick="document.getElementById('fileInput').click()" class="flex flex-col items-center gap-2 mx-auto text-emerald-600">
+                        <i data-lucide="file-up" class="w-8 h-8"></i>
+                        <span class="text-sm font-bold">Pilih File PDF atau Gambar</span>
+                    </button>
+                    <p id="fileNameDisplay" class="text-[10px] text-slate-400 mt-2 italic">Belum ada file dipilih</p>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full btn-emerald text-white py-4 rounded-xl font-bold shadow-lg hover:opacity-90 transition-opacity">Mulai Upload Sekarang</button>
+            </form>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
-        const refreshIcons = () => window.lucide && window.lucide.createIcons();
+        // CONFIG OTOMATIS DARI SCREENSHOT ANDA
+        const firebaseConfig = {
+            apiKey: "AIzaSyDy6_e0g_zOXBtQ6ll6z1z6Zlh4raRJ9-w",
+            authDomain: "kkg-pai-lau.firebaseapp.com",
+            projectId: "kkg-pai-lau",
+            storageBucket: "kkg-pai-lau.firebasestorage.app",
+            messagingSenderId: "332195384967",
+            appId: "1:332195384967:web:2e239a77f34f5a84dab222"
+        };
 
-        // Firebase Configuration
-        const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kkg-pai-lau-v3';
+        const appId = "kkg-pai-lau-prod";
 
-        // App State
-        let user = null;
-        let currentCategory = 'Semua';
-        let currentYear = '2025';
-        let currentMonth = '03';
-        let allFiles = [];
-
-        // UI Elements
-        const fileContainer = document.getElementById('fileContainer');
-        const uploadModal = document.getElementById('uploadModal');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const closeModal = document.getElementById('closeModal');
-        const uploadForm = document.getElementById('uploadForm');
-        const fileInput = document.getElementById('fileInput');
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const progressContainer = document.getElementById('uploadProgressContainer');
-        const submitBtn = document.getElementById('submitBtn');
-
-        // Auth Listener
-        onAuthStateChanged(auth, async (u) => {
-            if (!u) {
-                try { await signInAnonymously(auth); } catch(e) { console.error(e); }
-            } else {
-                user = u;
-                loadData();
-            }
-        });
-
-        // Modal Controls
-        uploadBtn.onclick = () => {
-            uploadModal.classList.remove('hidden');
-            setTimeout(() => uploadModal.firstElementChild.classList.remove('scale-95'), 10);
-        };
-        closeModal.onclick = () => {
-            uploadModal.classList.add('hidden');
-            uploadModal.firstElementChild.classList.add('scale-95');
-        };
-
-        // File Selection Feedback
-        fileInput.onchange = (e) => {
-            if (e.target.files.length > 0) {
-                fileNameDisplay.innerText = e.target.files[0].name;
-                fileNameDisplay.classList.add('text-indigo-600');
-            }
-        };
-
-        // Filter Handlers
-        document.getElementById('yearFilter').onchange = (e) => { currentYear = e.target.value; renderFiles(); };
-        document.getElementById('monthFilter').onchange = (e) => { currentMonth = e.target.value; renderFiles(); };
-        document.querySelectorAll('.category-tab').forEach(tab => {
-            tab.onclick = () => {
-                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                currentCategory = tab.dataset.category;
-                renderFiles();
-            };
-        });
-
-        function showNotification(msg, isError = false) {
-            const notif = document.getElementById('notification');
-            const message = document.getElementById('notifMessage');
-            const icon = document.getElementById('notifIcon');
-            
-            message.innerText = msg;
-            icon.className = isError ? 'w-10 h-10 rounded-xl bg-red-500 flex items-center justify-center' : 'w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center';
-            icon.innerHTML = `<i data-lucide="${isError ? 'alert-circle' : 'check'}" class="w-5 h-5 text-white"></i>`;
-            
-            refreshIcons();
-            notif.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => notif.classList.add('translate-y-20', 'opacity-0'), 3000);
-        }
-
-        // CRUD Logic
-        function loadData() {
+        // Login & Data Listener
+        signInAnonymously(auth).then(() => {
             const q = collection(db, 'artifacts', appId, 'public', 'data', 'files');
             onSnapshot(q, (snapshot) => {
-                allFiles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderFiles();
+                const files = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                render(files);
+            }, (err) => {
+                document.getElementById('fileContainer').innerHTML = `
+                    <div class="col-span-full p-6 bg-red-50 text-red-600 rounded-2xl border border-red-100 text-sm">
+                        <b>Izin Firebase Belum Aktif:</b> Buka tab 'Rules' di Firestore & Storage, lalu ubah 'false' menjadi 'true'.
+                    </div>`;
             });
-        }
+        });
 
-        uploadForm.onsubmit = async (e) => {
-            e.preventDefault();
-            if (!user) return;
+        function render(data) {
+            const y = document.getElementById('yearFilter').value;
+            const m = document.getElementById('monthFilter').value;
+            const filtered = data.filter(f => f.year === y && f.month === m);
 
-            const title = document.getElementById('fileTitle').value;
-            const category = document.getElementById('fileCategory').value;
-            const year = document.getElementById('fileYear').value;
-            const month = document.getElementById('fileMonth').value;
-            let finalUrl = document.getElementById('fileUrl').value;
-            let storagePath = null;
-
-            const selectedFile = fileInput.files[0];
-
-            // Start Uploading UI
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50');
-
-            if (selectedFile) {
-                progressContainer.classList.remove('hidden');
-                storagePath = `artifacts/${appId}/public/data/${Date.now()}_${selectedFile.name}`;
-                const storageRef = ref(storage);
-                const fileRef = ref(storage, storagePath);
-                const uploadTask = uploadBytesResumable(fileRef, selectedFile);
-
-                try {
-                    await new Promise((resolve, reject) => {
-                        uploadTask.on('state_changed', 
-                            (snapshot) => {
-                                const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                                progressBar.style.width = prog + '%';
-                                progressText.innerText = prog + '%';
-                            }, 
-                            (error) => reject(error), 
-                            async () => {
-                                finalUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                                resolve();
-                            }
-                        );
-                    });
-                } catch (err) {
-                    showNotification("Gagal Upload File ke Server", true);
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('opacity-50');
-                    return;
-                }
-            }
-
-            if (!finalUrl) {
-                showNotification("Pilih file atau masukkan link!", true);
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-50');
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'files'), {
-                    title, category, url: finalUrl, year, month, storagePath,
-                    createdAt: Date.now()
-                });
-                
-                uploadForm.reset();
-                fileNameDisplay.innerText = "Klik untuk pilih berkas...";
-                progressContainer.classList.add('hidden');
-                uploadModal.classList.add('hidden');
-                showNotification("Berkas Berhasil Terarsip ✨");
-            } catch (err) {
-                showNotification("Gagal menyimpan data", true);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-50');
-            }
-        };
-
-        window.deleteFile = async (id, sPath) => {
-            if (!confirm("Hapus dokumentasi ini permanen?")) return;
-            try {
-                // Delete from Storage if exists
-                if (sPath) {
-                    const fileRef = ref(storage, sPath);
-                    await deleteObject(fileRef);
-                }
-                // Delete from Firestore
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'files', id));
-                showNotification("Dokumen Berhasil Dihapus");
-            } catch (err) {
-                showNotification("Gagal menghapus", true);
-            }
-        };
-
-        function renderFiles() {
-            const filtered = allFiles.filter(f => {
-                const matchCat = currentCategory === 'Semua' || f.category === currentCategory;
-                return matchCat && f.year === currentYear && f.month === currentMonth;
-            });
-
-            document.getElementById('statsInfo').innerText = `Menampilkan ${filtered.length} Berkas`;
-
+            document.getElementById('statsInfo').innerText = `Total: ${filtered.length} Berkas`;
+            const container = document.getElementById('fileContainer');
+            
             if (filtered.length === 0) {
-                fileContainer.innerHTML = `
-                    <div class="col-span-full py-24 text-center glass-card rounded-[2.5rem] border-dashed border-2 border-slate-200">
-                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i data-lucide="inbox" class="w-10 h-10 text-slate-200"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-300">Belum Ada Dokumentasi</h3>
-                        <p class="text-slate-400 text-sm italic">Silakan tambahkan data untuk periode ini.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="col-span-full py-10 text-center text-slate-400 italic">Data belum tersedia untuk periode ini.</div>`;
             } else {
-                fileContainer.innerHTML = filtered.map(file => `
-                    <div class="file-card glass-card p-6 rounded-[2rem] flex flex-col justify-between">
+                container.innerHTML = filtered.map(f => `
+                    <div class="premium-card p-6 rounded-3xl flex flex-col justify-between border-l-4 border-l-emerald-500">
                         <div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="w-14 h-14 rounded-2xl hero-gradient flex items-center justify-center text-white shadow-lg shadow-indigo-100">
-                                    <i data-lucide="${getIcon(file.category)}" class="w-7 h-7"></i>
-                                </div>
-                                <button onclick="deleteFile('${file.id}', ${file.storagePath ? `'${file.storagePath}'` : 'null'})" class="p-2.5 hover:bg-red-50 text-slate-300 hover:text-red-500 rounded-xl transition-all">
-                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                </button>
-                            </div>
-                            <h4 class="text-xl font-black text-slate-800 leading-tight mb-3">${file.title}</h4>
-                            <div class="flex flex-wrap gap-2 mb-8">
-                                <span class="px-3 py-1 bg-white border border-slate-100 rounded-lg text-[10px] font-black uppercase text-slate-500 tracking-wider">${file.category}</span>
-                                <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-wider">${getMonthName(file.month)} ${file.year}</span>
-                            </div>
+                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded uppercase">${f.category}</span>
+                            <h4 class="font-bold text-lg mt-2 text-slate-800 leading-tight">${f.title}</h4>
                         </div>
-                        <a href="${file.url}" target="_blank" class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-slate-900 text-white font-bold hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-slate-200">
-                            <i data-lucide="${file.storagePath ? 'file-down' : 'external-link'}" class="w-4 h-4"></i>
-                            ${file.storagePath ? 'Lihat/Download' : 'Buka Link'}
-                        </a>
+                        <div class="flex justify-between items-center mt-6">
+                            <button onclick="deleteMe('${f.id}')" class="text-red-400 text-xs hover:text-red-600 flex items-center gap-1">
+                                <i data-lucide="trash-2" class="w-3 h-3"></i> Hapus
+                            </button>
+                            <a href="${f.url}" target="_blank" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-emerald-600 transition-colors">Buka File</a>
+                        </div>
                     </div>
                 `).join('');
             }
-            refreshIcons();
+            lucide.createIcons();
         }
 
-        function getIcon(cat) {
-            const icons = { 'Undangan': 'mail', 'Notulen': 'pen-tool', 'Daftar Hadir': 'clipboard-list', 'Dokumentasi': 'camera' };
-            return icons[cat] || 'file-text';
-        }
+        // Action Handlers
+        document.getElementById('uploadBtn').onclick = () => document.getElementById('uploadModal').classList.remove('hidden');
+        document.getElementById('closeModal').onclick = () => document.getElementById('uploadModal').classList.add('hidden');
+        document.getElementById('fileInput').onchange = (e) => {
+            if(e.target.files[0]) document.getElementById('fileNameDisplay').innerText = e.target.files[0].name;
+        };
 
-        function getMonthName(m) {
-            const months = { '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April', '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus', '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember' };
-            return months[m] || m;
-        }
+        window.deleteMe = async (id) => {
+            if(confirm("Hapus file ini secara permanen?")) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'files', id));
+            }
+        };
 
-        window.addEventListener('load', refreshIcons);
+        document.getElementById('uploadForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const file = document.getElementById('fileInput').files[0];
+            if(!file) return alert("Pilih file dulu!");
+
+            btn.disabled = true; btn.innerText = "Mengunggah...";
+            try {
+                const sRef = ref(storage, `kkg/${Date.now()}_${file.name}`);
+                await uploadBytes(sRef, file);
+                const url = await getDownloadURL(sRef);
+                
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'files'), {
+                    title: document.getElementById('fileTitle').value,
+                    category: document.getElementById('fileCategory').value,
+                    year: document.getElementById('yearFilter').value,
+                    month: document.getElementById('monthFilter').value,
+                    url, createdAt: Date.now()
+                });
+                
+                document.getElementById('uploadModal').classList.add('hidden');
+                document.getElementById('uploadForm').reset();
+                document.getElementById('fileNameDisplay').innerText = "Belum ada file dipilih";
+            } catch(err) { 
+                alert("Gagal mengunggah! Pastikan Rules Firebase Storage sudah Aktif."); 
+                console.error(err);
+            }
+            btn.disabled = false; btn.innerText = "Mulai Upload Sekarang";
+        };
+
+        document.getElementById('yearFilter').onchange = () => location.reload();
+        document.getElementById('monthFilter').onchange = () => location.reload();
+        lucide.createIcons();
     </script>
 </body>
 </html>
